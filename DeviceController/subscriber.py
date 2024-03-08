@@ -1,6 +1,12 @@
+from enum import Enum
 import broadlink as broadlink
 import paho.mqtt.client as mqtt
 import json
+
+class State(Enum):
+    START_LEARNING = "start_learning"
+    STOP_LEARNING = "end_learning"
+    SEND_PACKET = "send_packet"
 
 def on_connect(mqttc, obj, flags, reason_code, properties):
     print("Reason code: " + str(reason_code))
@@ -9,7 +15,15 @@ def on_connect(mqttc, obj, flags, reason_code, properties):
 def on_message(mqttc, obj, msg):
 	print(msg.topic + " " + str(msg.qos) + " " + str(msg.payload))
 	payload = json.loads(msg.payload)
-	payload['data']
+	state = payload['state']
+	if state is State.START_LEARNING:
+		print("Start learning IR signals")
+	elif state is State.STOP_LEARNING:
+		print("Stop learning IR signals")
+	elif state is State.SEND_PACKET:
+		print("Send IR signal to device")
+	else: 
+		print("Invalid state")
 
 
 def on_subscribe(mqttc, obj, mid, reason_code_list, properties):
