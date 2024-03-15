@@ -1,4 +1,4 @@
-from .states import States as states
+import states
 import paho.mqtt.client as mqtt
 import json
 
