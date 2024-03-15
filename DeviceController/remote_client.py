@@ -15,14 +15,14 @@ class RemoteClient:
 	# Main functions
 	def configure_broadlink(ssid, password, security_mode):
 		print("Setting up Broadlink...")
-		
+
 		broadlink.setup(ssid, password, security_mode)
 
 	def connect_to_device(self):
 		print("Discovering devices...")
 		devices = []
 		while not devices:
-			devices = broadlink.discover()
+			devices = broadlink.discover(timeout=5)
 		self.device = devices[0]
 		print("Found a device!")
 		self.device.auth()
