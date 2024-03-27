@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Switch Control</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#switch-btn').click(function() {
+                var currentState = $(this).data('state');
+                var newState = currentState === 'ON' ? 'OFF' : 'ON';
+                $.ajax({
+                    url: '/toggle_switch',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({"state": newState}),
+                    success: function(response) {
+                        $('#switch-btn').text('Switch is ' + response.state);
+                        $('#switch-btn').data('state', response.state);
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <button id="switch-btn" data-state="OFF">Switch is OFF</button>
+</body>
+</html>
