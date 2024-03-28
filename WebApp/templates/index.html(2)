@@ -6,17 +6,30 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function() {
-            $('#switch-btn').click(function() {
+            $('#find-remote-btn').click(function() {
                 var currentState = $(this).data('state');
                 var newState = currentState === 'ON' ? 'OFF' : 'ON';
                 $.ajax({
-                    url: '/toggle_switch',
+                    url: '/find_remote',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({"state": newState}),
                     success: function(response) {
-                        $('#switch-btn').text('Switch is ' + response.state);
-                        $('#switch-btn').data('state', response.state);
+                        $('#find-remote-btn').text('Find remote');
+                    }
+                });
+            });
+            
+			$('#learn-command-btn').click(function() {
+                var currentState = $(this).data('state');
+                var newState = currentState === 'ON' ? 'OFF' : 'ON';
+                $.ajax({
+                    url: '/learn_command',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({"state": newState}),
+                    success: function(response) {
+                        $('#learn-command-btn').text('Learn command');
                     }
                 });
             });
@@ -24,6 +37,7 @@
     </script>
 </head>
 <body>
-    <button id="switch-btn" data-state="OFF">Switch is OFF</button>
+    <button id="find-remote-btn" data-state="OFF">Find remote</button>
+    <button id="learn-command-btn" data-state="OFF">Learn command</button>
 </body>
 </html>
