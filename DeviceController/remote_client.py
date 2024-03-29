@@ -1,19 +1,15 @@
-from actions import Actions
-from command import Command
-from remote_exception import RemoteException
-from broadlink.exceptions import ReadError, StorageError
-import broadlink
 import time
+import broadlink
+from broadlink.exceptions import ReadError, StorageError
+from remote_exception import RemoteException
 
 class RemoteClient:
 	TIMEOUT = 30
-
-	action: Actions
+	
 	remote: broadlink.Device
 
 	# Main functions
 	def __init__(self):
-		self.action = Actions.DISCONNECT
 		self.remote = None
 
 	def configure_broadlink(self, ssid, password, security_mode):
@@ -32,7 +28,7 @@ class RemoteClient:
 			return self.remote
 		else:
 			print("Could not find a remote.")
-			raise RemoteException("NoRemoteFound")		
+			raise RemoteException("NoRemoteFound", "No remotes were found")		
 
 	
 	def discover_command(self):
@@ -40,18 +36,21 @@ class RemoteClient:
 			print("Checking for signal...")
 			start = time.time()
 			self.remote.enter_learning()
-			while (time.time() - start < self.TIMEOUT) or (self.action is Actions.START_LEARNING):
+			while (time.time() - start < self.TIMEOUT):
 				try:   
 					packet = self.remote.check_data()
 					print("Found signal!")
 					print(packet.hex())
 					command_str = ''.join(format(x, '02x') for x in bytearray(packet))
 					return command_str
+				except broadlink.exceptions.NetworkTimeoutError:
+					print("Network timed out.")
+					raise RemoteException("NoSignalFound", "Could not find any signal")
 				except (ReadError, StorageError):
 					continue
 			else:
 				print("Signal timed out.")
-				raise RemoteException("NoSignalFound")
+				raise RemoteException("NoSignalFound", "Could not find any signal")
 
 	def send_command(self, command: str):
 		try:
@@ -62,4 +61,4 @@ class RemoteClient:
 		except Exception as ex:
 			print(ex)
 			print("Something went wrong while sending command.")
-			raise RemoteException("CannotSendCommand")
+			raise RemoteException("CannotSendCommand", "Could not send command")
