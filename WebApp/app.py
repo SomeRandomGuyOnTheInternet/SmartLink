@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify
 import paho.mqtt.client as mqtt
 import paho.mqtt.publish as publish
 import json
-import flask.socketio import SocketIO
 
 app = Flask(__name__)
 

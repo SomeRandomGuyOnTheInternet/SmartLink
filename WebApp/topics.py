@@ -1,0 +1,6 @@
+CONNECT_REMOTE_REQUEST = "smartlink/connect_remote_request"
+CONNECT_REMOTE_RESPONSE = "smartlink/connect_remote_response"
+LEARN_COMMAND_REQUEST = "smartlink/learn_command_request"
+LEARN_COMMAND_RESPONSE = "smartlink/learn_command_response"
+SEND_COMMAND_REQUEST = "smartlink/send_command_request"
+SEND_COMMAND_RESPONSE = "smartlink/send_command_response"
