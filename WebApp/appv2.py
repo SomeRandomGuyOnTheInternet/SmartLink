@@ -59,9 +59,9 @@ mqttc.on_subscribe = on_subscribe
 mqttc.connect(MQTT_BROKER_URL, MQTT_BROKER_PORT, MQTT_KEEPALIVE_INTERVAL )
 
 # Continue the network loop
-mqttc.loop_forever()
+mqttc.loop_start()
 
-   
+
 def on_message_found_remote(mqttc, obj, msg):
 	payload = json.loads(msg.payload)
 	print("Found remote!")
@@ -75,7 +75,10 @@ def on_message_found_command(mqttc, obj, msg):
 def on_subscribe(mqttc, obj, mid, reason_code_list, properties):
 	print("Subscribed: " + str(mid) + " " + str(reason_code_list))
 	
-	
+def publish_message(topic, message, broker_address="localhost"):
+    publish.single(topic, message, hostname=broker_address)
+
+
 	
 # Route for serving the HTML
 @app.route('/')
@@ -94,3 +97,4 @@ def learn_command():
 	
 if __name__ == '__main__':
 	app.run(debug=True, host='0.0.0.0',port=5000)
+
