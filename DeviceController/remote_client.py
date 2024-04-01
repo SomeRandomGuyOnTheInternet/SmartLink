@@ -32,30 +32,29 @@ class RemoteClient:
 
 	
 	def discover_command(self):
-		if self.remote != None:
-			print("Checking for signal...")
-			start = time.time()
-			self.remote.enter_learning()
-			while (time.time() - start < self.TIMEOUT):
-				try:   
-					packet = self.remote.check_data()
-					print("Found signal!")
-					print(packet.hex())
-					command_str = ''.join(format(x, '02x') for x in bytearray(packet))
-					return command_str
-				except broadlink.exceptions.NetworkTimeoutError:
-					print("Network timed out.")
-					raise RemoteException("NoSignalFound", "Could not find any signal")
-				except (ReadError, StorageError):
-					continue
-			else:
-				print("Signal timed out.")
+		if (self.remote is None):
+			raise RemoteException("NoRemote", "There are no remotes connected to the server!")
+		print("Checking for signal...")
+		start = time.time()
+		self.remote.enter_learning()
+		while (time.time() - start < self.TIMEOUT):
+			try:   
+				packet = self.remote.check_data()
+				print("Found signal!")
+				print(packet.hex())
+				command_str = ''.join(format(x, '02x') for x in bytearray(packet))
+				return command_str
+			except broadlink.exceptions.NetworkTimeoutError:
+				print("Network timed out.")
 				raise RemoteException("NoSignalFound", "Could not find any signal")
+			except (ReadError, StorageError):
+				continue
 
 	def send_command(self, command: str):
+		if (self.remote is None):
+			raise RemoteException("NoRemote", "There are no remotes connected to the server!")
 		try:
 			print("Trying to send command...")
-			print(command)
 			self.remote.send_data(bytearray.fromhex(''.join(command)))
 			print("Command sent successfully!")
 		except Exception as ex:

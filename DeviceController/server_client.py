@@ -48,6 +48,7 @@ class ServerClient:
 		print("recieved message")
 
 	def on_message_connect_remote(self, mqttc, obj, msg):
+		payload = {}
 		try:
 			remote: broadlink.Device = self.remote_client.connect_to_remote()
 			payload = self.success_response
@@ -65,8 +66,10 @@ class ServerClient:
 			mqttc.publish(topics.CONNECT_REMOTE_RESPONSE, payload, qos=1)
 
 	def on_message_learn_command(self, mqttc, obj, msg):
+		payload = {}
 		try:
-			payload = json.loads(msg.payload)
+			if (self.remote_client.remote is None):
+				raise RemoteException("NoRemote", "There are no remotes connected to the server!")
 			command = self.remote_client.discover_command()
 			payload = self.success_response
 			payload["command"] = command			
@@ -82,8 +85,13 @@ class ServerClient:
 			payload = json.dumps(payload)
 			mqttc.publish(topics.LEARN_COMMAND_RESPONSE, payload, qos=1)
 
+# validate whether device exists
 	def on_message_send_command(self, mqttc, obj, msg):
+		payload = {}
+		print(msg)
 		try:
+			if (self.remote_client.remote is None):
+				raise RemoteException("NoRemote", "There are no remotes connected to the server!")
 			payload = json.loads(msg.payload)
 			self.remote_client.send_command(payload["command"])
 			payload = self.success_response		
@@ -91,7 +99,7 @@ class ServerClient:
 			payload = self.error_response
 			payload["status"] = e.status
 			payload["message"] = e.message
-		except (UnboundLocalError, json.decoder.JSONDecodeError) as e:
+		except (UnboundLocalError, json.decoder.JSONDecodeError, KeyError) as e:
 			payload = self.error_response
 			payload["status"] = "IncorrectPayloadFormat"
 			payload["message"] = "Payload is incorrectly formatted"
