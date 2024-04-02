@@ -2,45 +2,102 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Home UI</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
-</head>
-<body>
-    <!-- Content goes here -->
-    <div class="container mt-5">
-        <h2 class="mb-4">Smart Home Control Panel</h2>
-        <div class="row">
-            <div class="col-sm-4">
-                <h4>Lights</h4>
-                <button class="btn btn-success"><i class="fas fa-lightbulb"></i> Turn On</button>
-                <button class="btn btn-danger"><i class="far fa-lightbulb"></i> Turn Off</button>
-            </div>
-            <div class="col-sm-4">
-                <h4>Thermostat</h4>
-                <button class="btn btn-primary"><i class="fas fa-plus"></i> Increase</button>
-                <button class="btn btn-info"><i class="fas fa-minus"></i> Decrease</button>
-            </div>
-            <div class="col-sm-4">
-                <h4>Security Cameras</h4>
-                <button class="btn btn-warning"><i class="fas fa-video"></i> Activate</button>
-                <button class="btn btn-secondary"><i class="fas fa-video-slash"></i> Deactivate</button>
-            </div>
-        </div>
-    </div>
-    <!-- Bootstrap JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <title>Switch Control</title>
+    <link href="../static/bootstrap/bootstrap.css" rel="stylesheet">
+    <script src="../static/jquery/jquery-3.7.1.min.js"></script>
+    <script src="../static/bootstrap/bootstrap.bundle.min.js"></script>
+    <script src="../static/js/app.js"></script>
     <script>
         $(document).ready(function() {
-            $('button').click(function() {
-                alert(`You have clicked ${$(this).text()} button`);
+            $('#find-remote-btn').click(function() {
+                $('#find-remote-btn').addClass('disabled');
+                $('#find-remote-btn').text('Finding remote...');
+                $.ajax({
+                    url: '/find_remote',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({}),
+                    success: function(response) {
+                        addSuccessAlert(response.responseText);
+                    },
+                    error: function(response) {
+                        addErrorAlert(response.responseText);
+                    },
+                    complete: function(response) {
+                        $('#find-remote-btn').removeClass('disabled');
+                        $('#find-remote-btn').text('Find remote');
+                    }
+                });
+            });
+            
+			$('#learn-command-btn').click(function() {
+                $('#learn-command-btn').addClass('disabled');
+                $('#learn-command-btn').text('Learning command...');
+                $.ajax({
+                    url: '/learn_command',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({}),
+                    success: function(response) {
+                        addSuccessAlert(response.responseText);
+                    },
+                    error: function(response) {
+                        addErrorAlert(response.responseText);
+                    },
+                    complete: function(response) {
+                        $('#learn-command-btn').removeClass('disabled');
+                        $('#learn-command-btn').text('Learn command');
+                    }
+                });
+            });
+            
+			$('#send-command-btn').click(function() {
+                $('#send-command-btn').addClass('disabled');
+                $('#send-command-btn').text('Sending command...');
+                $.ajax({
+                    url: '/send_command',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({"command": "2600ec006d390d0f0d2b0d0f0d0f0c100e0e0d0f0d0f0d0f0c100c100d0f0d0f0d2b0c100c0f0e0e0e0f0d0f0c100c0f0d0f0d100d2b0d0e0d0f0e0f0d2b0d0e0d0f0d2c0c100c0f0d0f0e0e0d100c0f0c100e0e0e0e0d2b0c100d2b0d2b0c2c0d2c0b100d0f0c2c0d0e0d2c0d0f0d2a0d2c0c2c0d2b0d0009606e390d0f0d2b0c100d0f0d0f0d0f0c100c100d0f0d0f0d0f0c100d0f0c2c0c100d0f0d0f0d0f0d0f0c0f0d100d0f0c100d2a0e0f0c100c100d2a0e0f0c100c2b0e0e0e0f0c100c100b100d0f0d0f0d100c100b2c0d0f0d2b0c2c0e2b0b2c0c100e0e0d2b0c100c2c0d0f0c2c0c2c0d2b0c2c0c000d05"}),
+                    success: function(response) {
+                        addSuccessAlert(response.responseText);
+                    },
+                    error: function(response) {
+                        addErrorAlert(response.responseText);
+                    },
+                    complete: function(response) {
+                        $('#send-command-btn').removeClass('disabled');
+                        $('#send-command-btn').text('Send command');
+                    }
+                });
             });
         });
     </script>
-    
+</head>
+<body>
+    <nav class="navbar navbar-light bg-light">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+            <img src="../static/images/SmartLink Logo (Text).png" alt="" width="150" height="50">
+            </a>
+        </div>
+    </nav>
+    {% if alert %}
+    <div id="flask-alert" class="alert alert-{{ alert["type"] }} alert-dismissible fade show" role="alert">
+        <div class="container">
+        {{ alert["message"] }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    </div>
+    {% endif %}
+    <div id="alert-container">
+    </div>
+    <div class="container mt-5">
+        <button type="button" class="btn btn-primary" id="find-remote-btn">Find remote</button>
+        <button type="button" class="btn btn-primary" id="learn-command-btn">Learn command</button>
+        <button type="button" class="btn btn-primary" id="send-command-btn">Send command</button>
+    </div>
 </body>
 </html>
