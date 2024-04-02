@@ -58,7 +58,7 @@ def index():
     alert = request.args.get('alert')
     return render_template('index.html', alert=alert)
 
-@app.route('/find_remote', methods=['POST'])
+@app.route('/find-remote', methods=['POST'])
 def find_remote():
     try:
         mqttc.connect(MQTT_BROKER_URL, MQTT_BROKER_PORT, MQTT_KEEPALIVE_INTERVAL)
@@ -71,16 +71,16 @@ def find_remote():
         print(e)
         return "Cannot find a remote client! Please make sure remote client is running on the same network.", 400
     
-@app.route('/learn_command', methods=['POST'])
+@app.route('/learn-command', methods=['POST'])
 def learn_command():
     try:
         publish_message(topics.LEARN_COMMAND_REQUEST, None)
         return "Sent request to server to learn IR command.", 200
     except ConnectionRefusedError as e:
         print(e)
-        return "There is no remote client to learn command from! Please make sure you have already connected with the remote client.", 400
+        return "There is no remote client to learn command from! Please make sure you have already connected to the remote client.", 400
     
-@app.route('/send_command', methods=['POST'])
+@app.route('/send-command', methods=['POST'])
 def send_command():
     try:
         command = request.json.get("command", "")
@@ -89,7 +89,7 @@ def send_command():
         return "Sent request to server to send IR command.", 200
     except ConnectionRefusedError as e:
         print(e)
-        return "Cannot find a remote client to send command to! Please make sure remote client is running on the same network.", 400
+        return "Cannot find a remote client to send command to! Please make sure you have already connected to the remote client.", 400
 
 
 if __name__ == '__main__':
