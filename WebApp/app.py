@@ -24,9 +24,6 @@ def on_connect(client, userdata, flags, rc):
     mqttc.subscribe(topics.CONNECT_REMOTE_RESPONSE, 0)
     mqttc.subscribe(topics.LEARN_COMMAND_RESPONSE, 0)
     mqttc.subscribe(topics.SEND_COMMAND_RESPONSE, 0)
-    print("Subscribed to MQTT Topic " + topics.CONNECT_REMOTE_RESPONSE)
-    print("Subscribed to MQTT Topic " + topics.LEARN_COMMAND_RESPONSE)
-    print("Subscribed to MQTT Topic " + topics.SEND_COMMAND_RESPONSE)
     mqttc.message_callback_add(topics.CONNECT_REMOTE_RESPONSE, on_message_connect_remote_response)
     mqttc.message_callback_add(topics.LEARN_COMMAND_RESPONSE, on_message_learn_command_response)
     mqttc.message_callback_add(topics.SEND_COMMAND_RESPONSE, on_message_learn_command_response)
@@ -69,7 +66,7 @@ def find_remote():
         mqttc.on_subscribe = on_subscribe
         mqttc.loop_start()
         publish_message(topics.CONNECT_REMOTE_REQUEST, None)
-        return "Successfully found and connected to remote.", 200
+        return "Sent request to server to find remote.", 200
     except socket.timeout as e:
         print(e)
         return "Cannot find a remote client! Please make sure remote client is running on the same network.", 400
@@ -78,7 +75,7 @@ def find_remote():
 def learn_command():
     try:
         publish_message(topics.LEARN_COMMAND_REQUEST, None)
-        return "Successfully tried to learn a command.", 200
+        return "Sent request to server to learn IR command.", 200
     except ConnectionRefusedError as e:
         print(e)
         return "There is no remote client to learn command from! Please make sure you have already connected with the remote client.", 400
@@ -89,7 +86,7 @@ def send_command():
         command = request.json.get("command", "")
         payload = {"command": command}
         publish_message(topics.SEND_COMMAND_REQUEST, json.dumps(payload))
-        return "Successfully sent a commend.", 200
+        return "Sent request to server to send IR command.", 200
     except ConnectionRefusedError as e:
         print(e)
         return "Cannot find a remote client to send command to! Please make sure remote client is running on the same network.", 400
