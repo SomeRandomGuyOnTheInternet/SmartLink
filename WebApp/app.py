@@ -19,10 +19,6 @@ FLASK_HOSTNAME = os.getenv('FLASK_HOSTNAME')
 FLASK_PORT = int(os.getenv('FLASK_PORT'))
 
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
-error_alert = {"type": "danger", "message": ""}
-success_alert = {"type": "success", "message": ""}
-warning_alert = {"type": "warning", "message": ""}
-
 
 def on_connect(client, userdata, flags, rc):
     mqttc.subscribe(topics.CONNECT_REMOTE_RESPONSE, 0)
