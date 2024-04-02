@@ -7,10 +7,7 @@ import paho.mqtt.publish as publish
 from dotenv import load_dotenv
 from flask import Flask, render_template, request, jsonify
 
-app = Flask(__name__)
 load_dotenv(override=True)
-
-# MQTT Configuration
 MQTT_BROKER_URL = os.getenv('MQTT_BROKER_URL')
 MQTT_BROKER_PORT = int(os.getenv('MQTT_BROKER_PORT'))
 MQTT_KEEPALIVE_INTERVAL = 5
@@ -18,6 +15,7 @@ BROKER_ADDRESS = os.getenv('BROKER_ADDRESS')
 FLASK_HOSTNAME = os.getenv('FLASK_HOSTNAME')
 FLASK_PORT = int(os.getenv('FLASK_PORT'))
 
+app = Flask(__name__)
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 
 def on_connect(client, userdata, flags, rc):
@@ -31,25 +29,23 @@ def on_connect(client, userdata, flags, rc):
 def on_subscribe(mqttc, obj, mid, reason_code_list, properties):
     print("Subscribed: " + str(mid) + " " + str(reason_code_list))
 
+def publish_message(topic, message, broker_address=BROKER_ADDRESS):
+    publish.single(topic, message, hostname=broker_address)
+
 def on_message_connect_remote_response(client, userdata, message):
     print("Processing CONNECT_REMOTE_RESPONSE message and publishing a response..")
     payload = json.loads(message.payload.decode('utf-8')) 
-    response_payload={"status": "ok"}
-    publish_message(topics.LEARN_COMMAND_REQUEST,json.dumps(response_payload))
+    publish_message(topics.LEARN_COMMAND_REQUEST,json.dumps(payload))
     
 def on_message_learn_command_response(client, userdata, message):
     print("Processing LEARN_COMMAND_RESPONSE message and publishing a response..")
     payload = json.loads(message.payload.decode('utf-8')) 
     response_payload={"commmand": payload["command"]}
-    print(response_payload)
     publish_message(topics.SEND_COMMAND_REQUEST ,json.dumps(response_payload))
 
 def on_message_send_command_response(client, userdata, message):
     print("Processing SEND_COMMAND_RESPONSE message and publishing a response..")
     payload = json.loads(message.payload.decode('utf-8')) 
-    
-def publish_message(topic, message, broker_address=BROKER_ADDRESS):
-    publish.single(topic, message, hostname=broker_address)
 
     
 # Route for serving the HTML
