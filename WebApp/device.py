@@ -1,16 +1,15 @@
-from typing import List
-from command import Command
+from action import Action
 
 class Device:
 	id: str
 	name: str
 	description: str
-	commands: List[Command]
+	commands: list[Action]
 
-	def __init__(self, id: str, name: str, description: str, commands: List[Command]):
+	def __init__(self, id: str, name: str, description: str, actions: list[Action]):
 		self.id = id
 		self.name = name
 		self.description = description
-		self.commands = commands
+		self.actions = actions
 
 	

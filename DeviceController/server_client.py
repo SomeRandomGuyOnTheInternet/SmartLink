@@ -50,6 +50,7 @@ class ServerClient:
 	def on_message_connect_remote(self, mqttc, obj, msg):
 		payload = {}
 		try:
+			payload = json.loads(msg.payload.decode('utf-8')) 
 			remote: broadlink.Device = self.remote_client.connect_to_remote()
 			payload = self.success_response
 			payload["device_name"] = remote.name			
@@ -88,7 +89,6 @@ class ServerClient:
 # validate whether device exists
 	def on_message_send_command(self, mqttc, obj, msg):
 		payload = {}
-		print(msg)
 		try:
 			if (self.remote_client.remote is None):
 				raise RemoteException("NoRemote", "There are no remotes connected to the server!")

@@ -9,7 +9,7 @@
         <link href="../static/bootstrap/bootstrap.css" rel="stylesheet" />
         <script src="../static/jquery/jquery-3.7.1.min.js"></script>
         <script src="../static/bootstrap/masonry.pkgd.min.js"></script>
-        <script src="../static/bootstrap/bootstrap.bundle.min.js"></script>
+        <script src="../static/bootstrap/bootstrap.bundle.js"></script>
         <script src="../static/js/app.js"></script>
         <script>
             $(document).ready(function () {
@@ -92,6 +92,9 @@
                         height="50"
                     />
                 </a>
+                <form class="d-flex">
+                    <button class="btn btn-outline-danger">Disconnect</button>
+                </form>
             </div>
         </nav>
         {% if alert %} <div id="flask-alert" class="alert alert-{{ alert["type"]
@@ -140,6 +143,8 @@
                 <div
                     class="col-sm-6 col-lg-4 mb-4"
                     style="position: absolute; left: 33.333333%; top: 0px"
+                    data-bs-toggle="modal"
+                    data-bs-target="#add-device-modal"
                 >
                     <div class="card text-white bg-primary p-3" role="button">
                         <p class="fs-4 text-center mb-0">+ Add Device</p>
@@ -159,6 +164,69 @@
             <button type="button" class="btn btn-primary" id="send-command-btn">
                 Send command
             </button>
+        </div>
+        <div
+            class="modal fade"
+            id="add-device-modal"
+            tabindex="-1"
+            aria-labelledby="add-device-label"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="add-device-label">
+                            Add Device
+                        </h1>
+                        <button
+                            type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close"
+                        ></button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label
+                                    for="device-name-input"
+                                    class="form-label"
+                                    >Name</label
+                                >
+                                <input
+                                    type="name"
+                                    class="form-control"
+                                    id="device-name-input"
+                                />
+                            </div>
+                            <div class="mb-3">
+                                <label
+                                    for="device-description-input"
+                                    class="form-label"
+                                    >Description</label
+                                >
+                                <input
+                                    type="name"
+                                    class="form-control"
+                                    id="device-description-input"
+                                />
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                        <button type="button" class="btn btn-primary">
+                            Submit
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </body>
 </html>
