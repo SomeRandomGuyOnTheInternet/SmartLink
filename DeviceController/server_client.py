@@ -9,6 +9,7 @@ BROKER_ADDRESS = "localhost"
 
 class ServerClient:
 	mqttc: mqtt.Client
+	name: str
 	client_id: str
 	hostname: str
 	port: str
@@ -19,9 +20,10 @@ class ServerClient:
 	success_response = {"response": "success"}
 	error_response = {"response": "error", "status": "", "message": ""}
 
-	def __init__(self, client_id, hostname, port, remote_client):
+	def __init__(self, client_id, name, hostname, port, remote_client):
 		self.mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 		self.client_id = client_id
+		self.name = name
 		self.hostname = hostname
 		self.port = port
 		self.remote_client = remote_client
@@ -48,12 +50,11 @@ class ServerClient:
 		print("recieved message")
 
 	def on_message_connect_remote(self, mqttc, obj, msg):
-		payload = {}
 		try:
-			payload = json.loads(msg.payload.decode('utf-8')) 
 			remote: broadlink.Device = self.remote_client.connect_to_remote()
 			payload = self.success_response
-			payload["device_name"] = remote.name			
+			payload["name"] = "Vignesh"	
+			payload["device_name"] = remote.name		
 		except RemoteException as e:
 			payload = self.error_response
 			payload["status"] = e.status

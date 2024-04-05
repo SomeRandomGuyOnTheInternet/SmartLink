@@ -5,7 +5,7 @@ from remote_exception import RemoteException
 
 class RemoteClient:
 	TIMEOUT = 30
-	
+
 	remote: broadlink.Device
 
 	# Main functions
@@ -28,12 +28,12 @@ class RemoteClient:
 			return self.remote
 		else:
 			print("Could not find a remote.")
-			raise RemoteException("NoRemoteFound", "No remotes were found")		
+			raise RemoteException("NoRemoteFound", "No remotes were found.")		
 
 	
 	def discover_command(self):
 		if (self.remote is None):
-			raise RemoteException("NoRemote", "There are no remotes connected to the server!")
+			raise RemoteException("NoRemote", "There are no remotes connected to the server.")
 		print("Checking for signal...")
 		start = time.time()
 		self.remote.enter_learning()
@@ -46,13 +46,13 @@ class RemoteClient:
 				return command_str
 			except broadlink.exceptions.NetworkTimeoutError:
 				print("Network timed out.")
-				raise RemoteException("NoSignalFound", "Could not find any signal")
+				raise RemoteException("NoSignalFound", "Could not find any commands.")
 			except (ReadError, StorageError):
 				continue
 
 	def send_command(self, command: str):
 		if (self.remote is None):
-			raise RemoteException("NoRemote", "There are no remotes connected to the server!")
+			raise RemoteException("NoRemote", "There are no remotes connected to the server.")
 		try:
 			print("Trying to send command...")
 			self.remote.send_data(bytearray.fromhex(''.join(command)))
@@ -60,4 +60,4 @@ class RemoteClient:
 		except Exception as ex:
 			print(ex)
 			print("Something went wrong while sending command.")
-			raise RemoteException("CannotSendCommand", "Could not send command")
+			raise RemoteException("CannotSendCommand", "Could not send the command.")

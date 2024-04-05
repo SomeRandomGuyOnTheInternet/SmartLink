@@ -1,232 +1,383 @@
-<!DOCTYPE html>
-<html lang="en" data-bs-theme="dark">
-    <head>
-        <meta charset="UTF-8" />
-        <title>SmartLink</title>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="../static/images/smartlink-logo.png" />
-        <link href="../static/bootstrap/bootstrap.css" rel="stylesheet" />
-        <script src="../static/jquery/jquery-3.7.1.min.js"></script>
-        <script src="../static/bootstrap/masonry.pkgd.min.js"></script>
-        <script src="../static/bootstrap/bootstrap.bundle.js"></script>
-        <script src="../static/js/app.js"></script>
-        <script>
-            $(document).ready(function () {
-                $("#find-remote-btn").click(function () {
-                    $("#find-remote-btn").addClass("disabled");
-                    $("#find-remote-btn").text("Finding remote...");
-                    $.ajax({
-                        url: "/find-remote",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({}),
-                        success: function (response) {
-                            addSuccessAlert(response.responseText);
-                        },
-                        error: function (response) {
-                            addErrorAlert(response.responseText);
-                        },
-                        complete: function (response) {
-                            $("#find-remote-btn").removeClass("disabled");
-                            $("#find-remote-btn").text("Find remote");
-                        },
-                    });
-                });
-
-                $("#learn-command-btn").click(function () {
-                    $("#learn-command-btn").addClass("disabled");
-                    $("#learn-command-btn").text("Learning command...");
-                    $.ajax({
-                        url: "/learn-command",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({}),
-                        success: function (response) {
-                            addSuccessAlert(response.responseText);
-                        },
-                        error: function (response) {
-                            addErrorAlert(response.responseText);
-                        },
-                        complete: function (response) {
-                            $("#learn-command-btn").removeClass("disabled");
-                            $("#learn-command-btn").text("Learn command");
-                        },
-                    });
-                });
-
-                $("#send-command-btn").click(function () {
-                    $("#send-command-btn").addClass("disabled");
-                    $("#send-command-btn").text("Sending command...");
-                    $.ajax({
-                        url: "/send-command",
-                        type: "POST",
-                        contentType: "application/json",
-                        data: JSON.stringify({
-                            command:
-                                "2600ec006d390d0f0d2b0d0f0d0f0c100e0e0d0f0d0f0d0f0c100c100d0f0d0f0d2b0c100c0f0e0e0e0f0d0f0c100c0f0d0f0d100d2b0d0e0d0f0e0f0d2b0d0e0d0f0d2c0c100c0f0d0f0e0e0d100c0f0c100e0e0e0e0d2b0c100d2b0d2b0c2c0d2c0b100d0f0c2c0d0e0d2c0d0f0d2a0d2c0c2c0d2b0d0009606e390d0f0d2b0c100d0f0d0f0d0f0c100c100d0f0d0f0d0f0c100d0f0c2c0c100d0f0d0f0d0f0d0f0c0f0d100d0f0c100d2a0e0f0c100c100d2a0e0f0c100c2b0e0e0e0f0c100c100b100d0f0d0f0d100c100b2c0d0f0d2b0c2c0e2b0b2c0c100e0e0d2b0c100c2c0d0f0c2c0c2c0d2b0c2c0c000d05",
-                        }),
-                        success: function (response) {
-                            addSuccessAlert(response.responseText);
-                        },
-                        error: function (response) {
-                            addErrorAlert(response.responseText);
-                        },
-                        complete: function (response) {
-                            $("#send-command-btn").removeClass("disabled");
-                            $("#send-command-btn").text("Send command");
-                        },
-                    });
-                });
-            });
-        </script>
-    </head>
-    <body>
-        <nav class="navbar navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="#">
-                    <img
-                        src="../static/images/smartlink-logo-text-dark.png"
-                        alt=""
-                        width="150"
-                        height="50"
-                    />
-                </a>
-                <form class="d-flex">
-                    <button class="btn btn-outline-danger">Disconnect</button>
-                </form>
-            </div>
-        </nav>
-        {% if alert %} <div id="flask-alert" class="alert alert-{{ alert["type"]
-        }} alert-dismissible fade show" role="alert">
-        <div class="container">
-            {{ alert["message"] }}
-            <button
-                type="button"
-                class="close"
-                data-dismiss="alert"
-                aria-label="Close"
-            >
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        {% endif %}
-        <div id="alert-container"></div>
-        <div class="container mt-5">
-            <h1>Home Setup</h1>
-            <div
-                class="row"
-                data-masonry='{"percentPosition": true }'
-                style="position: relative; height: 690px"
-            >
-                <div
-                    class="col-sm-6 col-lg-4 mb-4"
-                    style="position: absolute; left: 33.333333%; top: 488px"
-                >
-                    <div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title">Fan</h5>
-                            <p class="card-text">It's a fan.</p>
-                            <div class="form-check form-switch">
-                                <label class="form-check-label" for="power-on"
-                                    >Power</label
-                                >
-                                <input
-                                    class="form-check-input"
-                                    type="checkbox"
-                                    id="power-on"
-                                />
+{% extends 'base.html' %} {% block body %}
+<nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">
+            <img
+                src="../static/images/smartlink-logo-text-dark.png"
+                alt=""
+                width="150"
+                height="50"
+            />
+        </a>
+        <form class="d-flex">
+            <a class="btn btn-outline-danger" href="/disconnect">Disconnect</a>
+        </form>
+    </div>
+</nav>
+<div class="container mt-5">
+    <h1>Home Setup</h1>
+    <div
+        class="row"
+        data-masonry='{"percentPosition": true }'
+        style="position: relative; height: 690px"
+    >
+        {% for device in devices %}
+        <div
+            class="col-sm-6 col-lg-3 mb-4"
+            style="position: absolute; left: 33.333333%; top: 488px"
+        >
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">{{ device.name }}</h5>
+                    <p class="card-text">{{ device.description }}</p>
+                    {% if device.actions is defined and device.actions|length > 0 %} 
+                    <ul class="list-group list-group-flush">
+                    {% for action in device.actions %}
+                    {% if action.is_toggle is true %}
+                    <li class="list-group-item">
+                        <div class="row align-items-center">
+                            <div class="col-6 p-0">
+                                <label
+                                    class="form-check-label"
+                                    for="action-trigger-{{ action.id }}"
+                                    >{{ action.name }}
+                                </label>
+                            </div>
+                            <div class="col-6 p-0">
+                                <div class="form-check form-switch">
+                                    <input
+                                        class="form-check-input action-trigger float-end"
+                                        type="checkbox"
+                                        id="action-trigger-{{ action.id }}"
+                                        data-action-id="{{ action.id }}"
+                                    />
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div
-                    class="col-sm-6 col-lg-4 mb-4"
-                    style="position: absolute; left: 33.333333%; top: 0px"
-                    data-bs-toggle="modal"
-                    data-bs-target="#add-device-modal"
-                >
-                    <div class="card text-white bg-primary p-3" role="button">
-                        <p class="fs-4 text-center mb-0">+ Add Device</p>
-                    </div>
+                    </li>
+                    {% else %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-6 p-0">
+                               <label
+                                    class="form-check-label"
+                                    for="action-trigger-{{ action.id }}"
+                                    >{{ action.name }}
+                                </label>
+                            </div>
+                            <div class="col-6 p-0">
+                                <button
+                                    class="btn btn-outline-primary btn-sm mb-2 action-trigger float-end"
+                                    id="action-trigger-{{ action.id }}"
+                                    data-action-id="{{ action.id }}"
+                                >
+                                    Press
+                                </button>
+                            </div>
+                        </div>
+                    </li>
+                    {% endif %} 
+                    {% endfor %}
+                    </ul>
+                    {% else %}
+                    <p class="pt-1">No actions added yet.</p>
+                    {% endif %}
+                    <br />
+                    <button
+                        type="button"
+                        class="btn btn-outline-secondary btn-sm add-action-modal-btn w-100"
+                        data-device-id={{ device.id }}
+                        data-bs-toggle="modal"
+                        data-bs-target="#add-action-modal"
+                    >
+                        Add action
+                    </button>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" id="find-remote-btn">
-                Find remote
-            </button>
-            <button
-                type="button"
-                class="btn btn-primary"
-                id="learn-command-btn"
-            >
-                Learn command
-            </button>
-            <button type="button" class="btn btn-primary" id="send-command-btn">
-                Send command
-            </button>
         </div>
+        {% endfor %}
         <div
-            class="modal fade"
-            id="add-device-modal"
-            tabindex="-1"
-            aria-labelledby="add-device-label"
-            aria-hidden="true"
+            class="col-sm-6 col-lg-3 mb-4"
+            style="position: absolute; left: 33.333333%; top: 0px"
+            data-bs-toggle="modal"
+            data-bs-target="#add-device-modal"
         >
-            <div class="modal-dialog modal-dialog-scrollable">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="add-device-label">
-                            Add Device
-                        </h1>
-                        <button
-                            type="button"
-                            class="btn-close"
-                            data-bs-dismiss="modal"
-                            aria-label="Close"
-                        ></button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label
-                                    for="device-name-input"
-                                    class="form-label"
-                                    >Name</label
-                                >
-                                <input
-                                    type="name"
-                                    class="form-control"
-                                    id="device-name-input"
-                                />
-                            </div>
-                            <div class="mb-3">
-                                <label
-                                    for="device-description-input"
-                                    class="form-label"
-                                    >Description</label
-                                >
-                                <input
-                                    type="name"
-                                    class="form-control"
-                                    id="device-description-input"
-                                />
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            data-bs-dismiss="modal"
-                        >
-                            Close
-                        </button>
-                        <button type="button" class="btn btn-primary">
-                            Submit
-                        </button>
-                    </div>
-                </div>
+            <div class="card text-white bg-primary p-3" role="button">
+                <p class="fs-4 text-center mb-0">+ Add Device</p>
             </div>
         </div>
-    </body>
-</html>
+    </div>
+</div>
+<div
+    class="modal fade"
+    id="add-device-modal"
+    tabindex="-1"
+    aria-labelledby="add-device-label"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="add-device-label">
+                    Add Device
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="device-name-input" class="form-label"
+                            >Name</label
+                        >
+                        <input
+                            type="name"
+                            class="form-control"
+                            id="device-name-input"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="device-description-input" class="form-label"
+                            >Description</label
+                        >
+                        <input
+                            type="name"
+                            class="form-control"
+                            id="device-description-input"
+                        />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                >
+                    Close
+                </button>
+                <button
+                    type="button"
+                    class="btn btn-primary"
+                    id="add-device-btn"
+                >
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div
+    class="modal fade"
+    id="add-action-modal"
+    tabindex="-1"
+    aria-labelledby="add-action-label"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="add-action-label">
+                    Add Action
+                </h1>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="action-name-input" class="form-label"
+                            >Name</label
+                        >
+                        <input
+                            type="name"
+                            class="form-control"
+                            id="action-name-input"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <label for="action-description-input" class="form-label"
+                            >Description</label
+                        >
+                        <input
+                            type="name"
+                            class="form-control"
+                            id="action-description-input"
+                        />
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <label
+                                class="form-check-label"
+                                for="action-is-toggle-input"
+                                >Is this action a toggle?</label
+                            >
+                            <input
+                                class="form-check-input"
+                                type="checkbox"
+                                id="action-is-toggle-input"
+                            />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary w-100 btn-block"
+                            id="learn-command-btn"
+                            data-
+                        >
+                            Learn command
+                        </button>
+                        <p class="d-none text-success pt-1" id="learnt-command-text">
+                            Learnt command!
+                        </p>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button
+                    type="button"
+                    class="btn btn-primary btn-block"
+                    id="add-action-btn"
+                >
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        var selected_device_id = "";
+        var command_recieved = "";
+
+        $("#add-device-btn").click(function () {
+            $("#add-device-btn").addClass("disabled");
+            $("#add-device-btn").text("Adding device...");
+
+            $.ajax({
+                url: "/add-device",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    name: $("#device-name-input").val(),
+                    description: $("#device-description-input").val(),
+                }),
+                success: function (response) {
+                    addSuccessAlert("Successfully added device.");
+                    window.location.reload();
+                },
+                error: function (response) {
+                    $("#add-device-btn").removeClass("disabled");
+                    $("#add-device-btn").text("Submit");
+                    console.error(response);
+                    addErrorAlert(response.responseText);
+                },
+            });
+        });
+
+        $(".add-action-modal-btn").click(function () {
+            selected_device_id = $(this).attr("data-device-id");
+            $("#learnt-command-text").addClass("d-none");
+        });
+
+        $("#learn-command-btn").click(function () {
+            command_recieved = "";
+            $("#learnt-command-text").addClass("d-none");
+            $("#learn-command-btn").addClass("disabled");
+            $("#learn-command-btn").text("Learning command...");
+
+            $.ajax({
+                url: "/learn-command",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({}),
+                error: function (response) {
+                    console.error(response);
+                    addErrorAlert(response.responseText);
+                },
+            });
+        });
+
+        socket.on("smartlink/learn_command_response", function (msg) {
+            console.log(msg);
+            if (msg["response"] == "success") {
+                $("#learnt-command-text").removeClass("d-none");
+                $("#learn-command-btn").removeClass("disabled");
+                $("#learn-command-btn").text("Learn command");
+                command_recieved = msg["command"];
+            } else {
+                console.error(msg);
+                addErrorAlert(msg["message"]);
+                $("#learnt-command-text").addClass("d-none");
+                $("#learn-command-btn").removeClass("disabled");
+                $("#learn-command-btn").text("Learn command");
+            }
+        });
+
+        $("#add-action-btn").click(function () {
+            $("#add-action-btn").addClass("disabled");
+            $("#add-action-btn").text("Adding action...");
+            $.ajax({
+                url: "/add-action",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    device_id: selected_device_id,
+                    name: $("#action-name-input").val(),
+                    description: $("#action-description-input").val(),
+                    command: command_recieved,
+                    is_toggle: $("#action-is-toggle-input").is(":checked"),
+                }),
+                success: function (response) {
+                    addSuccessAlert("Successfully added action to device.");
+                    window.location.reload();
+                },
+                error: function (response) {
+                    $("#add-action-btn").removeClass("disabled");
+                    $("#add-action-btn").text("Submit");
+                    console.error(response);
+                    addErrorAlert(
+                        "Something went wrong while adding action to device."
+                    );
+                },
+            });
+        });
+
+        $(".action-trigger").click(function () {
+            var action_id = $(this).attr("data-action-id");
+            $.ajax({
+                url: "/send-command",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    action_id: action_id,
+                }),
+                error: function (response) {
+                    addErrorAlert(
+                        "Something went wrong while sending command."
+                    );
+                },
+            });
+        });
+
+        socket.on("smartlink/send_command_response", function (msg) {
+            console.log(msg);
+            if (msg["response"] == "success") {
+                addSuccessAlert("Successfully sent command.");
+            } else {
+                console.error(msg);
+                addErrorAlert(msg["message"]);
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <title>SmartLink</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="../static/images/smartlink-logo.png" />
+        <link href="../static/bootstrap/bootstrap.css" rel="stylesheet" />
+        <script src="../static/jquery/jquery-3.7.1.min.js"></script>
+        <script src="../static/socket/socket.io.js"></script>
+        <script src="../static/bootstrap/masonry.pkgd.min.js"></script>
+        <script src="../static/bootstrap/bootstrap.bundle.js"></script>
+        <script src="../static/js/app.js"></script>
+    </head>
+    <body>
+        <div
+            id="alert-container"
+            class="toast-container position-absolute top-0 end-0 pt-5 p-4 d-flex justify-content-center align-items-center w-100"
+            aria-live="polite"
+            aria-atomic="true"
+        ></div>
+        {% block body %} {% endblock %}
+    </body>
+    <script>
+        $(document).ready(function () {
+            $(".toast").toast("show");
+        });
+    </script>
+</html>
