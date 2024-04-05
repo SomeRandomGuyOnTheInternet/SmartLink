@@ -85,7 +85,7 @@
                     <br />
                     <button
                         type="button"
-                        class="btn btn-outline-secondary btn-sm add-action-modal-btn w-100"
+                        class="btn btn-outline-primary btn-sm add-action-modal-btn w-100"
                         data-device-id={{ device.id }}
                         data-bs-toggle="modal"
                         data-bs-target="#add-action-modal"
@@ -239,6 +239,9 @@
                         <p class="d-none text-success pt-1" id="learnt-command-text">
                             Learnt command!
                         </p>
+                        <p class="d-none text-danger pt-1" id="no-command-text">
+                            No command entered!
+                        </p>
                     </div>
                 </form>
             </div>
@@ -292,6 +295,7 @@
         $("#learn-command-btn").click(function () {
             command_recieved = "";
             $("#learnt-command-text").addClass("d-none");
+            $("#no-command-text").addClass("d-none");
             $("#learn-command-btn").addClass("disabled");
             $("#learn-command-btn").text("Learning command...");
 
@@ -310,13 +314,20 @@
         socket.on("smartlink/learn_command_response", function (msg) {
             console.log(msg);
             if (msg["response"] == "success") {
-                $("#learnt-command-text").removeClass("d-none");
+                if (msg["command"] == null) {
+                    $("#no-command-text").removeClass("d-none");
+                    $("#learnt-command-text").addClass("d-none");
+                } else {
+                    $("#no-command-text").addClass("d-none");
+                    $("#learnt-command-text").removeClass("d-none");
+                }
                 $("#learn-command-btn").removeClass("disabled");
                 $("#learn-command-btn").text("Learn command");
                 command_recieved = msg["command"];
             } else {
                 console.error(msg);
                 addErrorAlert(msg["message"]);
+                $("#no-command-text").addClass("d-none");
                 $("#learnt-command-text").addClass("d-none");
                 $("#learn-command-btn").removeClass("disabled");
                 $("#learn-command-btn").text("Learn command");
@@ -345,9 +356,7 @@
                     $("#add-action-btn").removeClass("disabled");
                     $("#add-action-btn").text("Submit");
                     console.error(response);
-                    addErrorAlert(
-                        "Something went wrong while adding action to device."
-                    );
+                    addErrorAlert(response.responseText);
                 },
             });
         });
@@ -362,9 +371,7 @@
                     action_id: action_id,
                 }),
                 error: function (response) {
-                    addErrorAlert(
-                        "Something went wrong while sending command."
-                    );
+                    addErrorAlert(response.responseText);
                 },
             });
         });
