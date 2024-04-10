@@ -1,5 +1,5 @@
 # SmartLink
-![SmartLink Logo](https://private-user-images.githubusercontent.com/33924596/310995566-da32e7aa-b6bc-46a6-b7b7-2732c63b23d5.png?jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJnaXRodWIuY29tIiwiYXVkIjoicmF3LmdpdGh1YnVzZXJjb250ZW50LmNvbSIsImtleSI6ImtleTUiLCJleHAiOjE3MDk4MzYyNzEsIm5iZiI6MTcwOTgzNTk3MSwicGF0aCI6Ii8zMzkyNDU5Ni8zMTA5OTU1NjYtZGEzMmU3YWEtYjZiYy00NmE2LWI3YjctMjczMmM2M2IyM2Q1LnBuZz9YLUFtei1BbGdvcml0aG09QVdTNC1ITUFDLVNIQTI1NiZYLUFtei1DcmVkZW50aWFsPUFLSUFWQ09EWUxTQTUzUFFLNFpBJTJGMjAyNDAzMDclMkZ1cy1lYXN0LTElMkZzMyUyRmF3czRfcmVxdWVzdCZYLUFtei1EYXRlPTIwMjQwMzA3VDE4MjYxMVomWC1BbXotRXhwaXJlcz0zMDAmWC1BbXotU2lnbmF0dXJlPTg3YTFmNmVlNzQ2ZTliNzIxMWM4MjZlZTQyZDk2NTNmODM5MDZiMTdkNTRmZTk3MjE0MzdiYmIyMTk0ZjNmMDUmWC1BbXotU2lnbmVkSGVhZGVycz1ob3N0JmFjdG9yX2lkPTAma2V5X2lkPTAmcmVwb19pZD0wIn0.gRYATl1K4hE4xMMOZKI5OPl4YJX-vg2wyD7AsFfNJdU)
+![SmartLink Logo](./WebApp/static/images/smartlink-logo-text.png)
 Overview
 ---------------
 SmartLink aims to develop an Internet of Things (IoT) solution for home automation, offering users seamless control over various household devices through a centralized web application. <br /><br />
