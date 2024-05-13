@@ -1,5 +1,3 @@
-import time
-from data_manager import DataManager
 import topics
 import auth
 import os
@@ -12,6 +10,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from flask_socketio import SocketIO, emit
 from device import Device
 from action import Action
+from data_manager import DataManager
 
 load_dotenv(override=True)
 MQTT_BROKER_URL = os.getenv('MQTT_BROKER_URL')
@@ -54,13 +53,11 @@ def on_message_connect_remote_response(client, userdata, message):
     
 def on_message_learn_command_response(client, userdata, message):
     print("Processing LEARN_COMMAND_RESPONSE message and publishing a response..")
-    print(message)
     payload = json.loads(message.payload.decode('utf-8'))
     socketio.emit(topics.LEARN_COMMAND_RESPONSE, payload)
 
 def on_message_send_command_response(client, userdata, message):
     print("Processing SEND_COMMAND_RESPONSE message and publishing a response..")
-    print(message)
     payload = json.loads(message.payload.decode('utf-8'))
     socketio.emit(topics.SEND_COMMAND_RESPONSE, payload)
 

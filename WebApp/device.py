@@ -17,7 +17,7 @@ class Device:
     @staticmethod
     def read_devices_csv(db_context: DBContext, all_actions: list[Action]):
         try:
-            data = db_context.read_from_csv("devices.csv")
+            data = db_context.read_from_csv(db_context.data_path + "devices.csv")
             devices = []
 
             for entry in data:
@@ -52,7 +52,7 @@ class Device:
                 data.append({headers[0]: device.id, headers[1]: device.name, headers[2]: device.description})
                 
 
-            return db_context.write_to_csv("devices.csv", data, headers)
+            return db_context.write_to_csv(db_context.data_path + "devices.csv", data, headers)
         except IOError as e:
             print(e)
             raise ValueError("Something went wrong while saving devices.")

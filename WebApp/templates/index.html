@@ -312,7 +312,6 @@
         });
 
         socket.on("smartlink/learn_command_response", function (msg) {
-            console.log(msg);
             if (msg["response"] == "success") {
                 if (msg["command"] == null) {
                     $("#no-command-text").removeClass("d-none");
@@ -377,7 +376,6 @@
         });
 
         socket.on("smartlink/send_command_response", function (msg) {
-            console.log(msg);
             if (msg["response"] == "success") {
                 addSuccessAlert("Successfully sent command.");
             } else {

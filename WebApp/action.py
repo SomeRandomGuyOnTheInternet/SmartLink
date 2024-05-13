@@ -24,7 +24,7 @@ class Action:
     @staticmethod
     def read_actions_csv(db_context: DBContext):
         try:
-            data = db_context.read_from_csv("actions.csv")
+            data = db_context.read_from_csv(db_context.data_path + "actions.csv")
             actions = []
             for entry in data:
                 try:
@@ -65,7 +65,7 @@ class Action:
                 data.append({headers[0]: action.id, headers[1]: action.device_id, headers[2]: action.name,
                             headers[3]: action.description, headers[4]: action.command, headers[5]: action.is_toggle, headers[6]: action.current_state})
 
-            return db_context.write_to_csv("actions.csv", data, headers)
+            return db_context.write_to_csv(db_context.data_path + "actions.csv", data, headers)
         except IOError as e:
             print(e)
             raise ValueError("Something went wrong while saving actions.")
