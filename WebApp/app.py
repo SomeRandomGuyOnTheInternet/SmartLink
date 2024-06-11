@@ -177,8 +177,6 @@ def disconnect():
             return redirect(url_for('find_remote')) 
     else:
         return redirect(url_for('index'))
-    
-
 
 
 if __name__ == '__main__':
